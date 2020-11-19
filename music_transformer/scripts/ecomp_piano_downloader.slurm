@@ -1,5 +1,23 @@
 #!/bin/bash
-
+# ======= SLURM OPTIONS ======= (user input required)
+#
+### Specify queue to run
+#SBATCH --partition=Orion
+### Set the job name
+#SBATCH --job-name=music_download
+### Specify the # of cpus for your job.
+#SBATCH --nodes=2
+#SBATCH --ntasks-per-node=4
+#SBATCH --mem=10GB
+#SBATCH --time=30:00:00
+### pass the full environment
+#SBATCH --export=ALL
+#SBATCH --output=job_logs/$SLURM_JOBID.o 
+#SBATCH --error=job_logs/$SLURM_JOBID.e
+#
+# ===== END SLURM OPTIONS =====
+cd $SLURM_SUBMIT_DIR
+mkdir -p job_logs
 # Scraper for Yamaha e-Piano Competition dataset
 [ ! "$1" ] && echo 'Error: please specify output dir' && exit
 dir=$1
