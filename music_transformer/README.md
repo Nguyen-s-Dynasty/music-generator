@@ -43,7 +43,7 @@
 $ sh script/{ecomp_piano_downloader, midi_world_downloader, ...}.sh
 ```
 
-* These shell files are from [performaceRNN re-built repository](https://github.com/djosix/Performance-RNN-PyTorch) implemented by [djosix](https://github.com/djosix)
+* Some of these imported from [performaceRNN re-built repository](https://github.com/djosix/Performance-RNN-PyTorch) by [djosix](https://github.com/djosix)
 
 
 
