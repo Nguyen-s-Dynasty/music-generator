@@ -20,19 +20,6 @@
 
 
 
-## Preprocessing
-
-* In this repository using single track method (2nd method in paper.).
-
-* If you want to get implementation of method 1, see [here](https://github.com/COMP6248-Reproducability-Challenge/music-transformer-comp6248) .
-
-* ~~I refered preprocess code from [performaceRNN re-built repository.](https://github.com/djosix/Performance-RNN-PyTorch).~~
-
-* Preprocess implementation repository is [here](https://github.com/jason9693/midi-neural-processor).
-
-  
-  ![](https://user-images.githubusercontent.com/11185336/51083282-cddfc300-175a-11e9-9341-4a9042b17c19.png)
-
 
 
 
