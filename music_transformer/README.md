@@ -35,14 +35,14 @@
 
 
 
-## Simple Start ( Repository Setting )
+~~## Simple Start ( Repository Setting )
 
-```bash
+~~```bash
 $ git clone https://github.com/jason9693/MusicTransformer-pytorch.git
 $ cd MusicTransformer-pytorch
 $ git clone https://github.com/jason9693/midi-neural-processor.git
 $ mv midi-neural-processor midi_processor
-```
+```~~
 
 
 
