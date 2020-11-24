@@ -35,15 +35,6 @@
 
 
 
-~~## Simple Start ( Repository Setting )
-
-~~```bash
-$ git clone https://github.com/jason9693/MusicTransformer-pytorch.git
-$ cd MusicTransformer-pytorch
-$ git clone https://github.com/jason9693/midi-neural-processor.git
-$ mv midi-neural-processor midi_processor
-```~~
-
 
 
 ## Midi Download	
@@ -64,7 +55,7 @@ $ python preprocess.py {midi_load_dir} {dataset_save_dir}
 
 
 
-## Trainig
+## Training
 
 ```bash
 $ python train.py -c {config yml file 1} {config yml file 2} ... -m {model_dir}
@@ -72,7 +63,7 @@ $ python train.py -c {config yml file 1} {config yml file 2} ... -m {model_dir}
 
 
 
-## Hyper Parameter
+## Hyper Parameters
 
 * learning rate : 0.0001
 * head size : 4
