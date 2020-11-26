@@ -19,7 +19,7 @@
 * Algorithm: Reduced space complexity of Transformer from O(N^2D) to O(ND).
 
 
-##UPDATE: Dependencies Setup
+## Dependencies Setup
 ``conda env create -f music_gen_env.yml``
 
 
