@@ -24,7 +24,13 @@ if torch.cuda.is_available():
     config.device = torch.device('cuda')
 else:
     config.device = torch.device('cpu')
+    
+print('CUDA is available: {}'.format(torch.cuda.is_available()))
+print('Number of GPUs: {}'.format(torch.cuda.device_count()))
 
+for i in range (0,torch.cuda.device_count()):
+    print('GPU #{}: {}'.format(i,torch.cuda.get_device_name(i)))
+    print('\n')
 
 # load data
 dataset = Data(config.pickle_dir)
@@ -44,7 +50,7 @@ mt = MusicTransformer(
             debug=config.debug, loader_path=config.load_path
 )
 mt.to(config.device)
-opt = optim.Adam(mt.parameters(), lr=0, betas=(0.9, 0.98), eps=1e-9)
+opt = optim.Adam(mt.parameters(), lr=learning_rate, betas=(0.9, 0.98), eps=1e-9)
 scheduler = CustomSchedule(config.embedding_dim, optimizer=opt)
 
 # multi-GPU set
