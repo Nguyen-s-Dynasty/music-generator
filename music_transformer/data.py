@@ -2,13 +2,24 @@ import utils
 import random
 import pickle
 import numpy as np
-
+import traceback
 from custom.config import config
 
 
 class Data:
     def __init__(self, dir_path):
         self.files = list(utils.find_files_by_extensions(dir_path, ['.pickle']))
+        # filter 
+        self.pre_filter_files = self.files
+        max_length = config.max_seq
+        self.filtered = []
+        for f_index in range(0,len(self.files)):
+            with open(self.files[f_index], 'rb') as f:
+                  data = pickle.load(f)
+                  if max_length <= len(data):
+                      self.filtered.append(self.files[f_index])
+            
+        self.files = self.filtered
         self.file_dict = {
             'train': self.files[:int(len(self.files) * 0.8)],
             'eval': self.files[int(len(self.files) * 0.8): int(len(self.files) * 0.9)],
@@ -19,7 +30,7 @@ class Data:
         pass
 
     def __repr__(self):
-        return '<class Data has "'+str(len(self.files))+'" files>'
+        return '<class Data has "'+str(len(self.pre_filter_files))+'" files>\n<class Data has "'+str(len(self.files))+'"filtered files>'
 
     def batch(self, batch_size, length, mode='train'):
 
