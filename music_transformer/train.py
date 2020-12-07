@@ -105,7 +105,7 @@ for e in range(config.epochs):
         sample = mt.forward(batch_x)
         sample = list(sample)
         #print(len(sample))
-        print(sample[0])
+        #print(sample[0])
        
         #for i in sample:
             #print(i)
