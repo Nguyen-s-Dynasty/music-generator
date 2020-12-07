@@ -84,7 +84,7 @@ class Data:
                 start = random.randrange(0,len(data) - max_length)
                 data = data[start:start + max_length]
             else:
-                raise IndexError
+                raise IndexError('max_length is {}\t length of the data sample is {}'.format(max_length,len(data)))
                 # data = np.append(data, config.token_eos)
                 # while len(data) < max_length:
                 #     data = np.append(data, config.pad_token)

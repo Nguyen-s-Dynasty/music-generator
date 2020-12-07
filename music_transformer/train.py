@@ -12,6 +12,7 @@ import time
 import torch
 import torch.optim as optim
 from tensorboardX import SummaryWriter
+import traceback
 
 
 # set config
@@ -25,13 +26,17 @@ if torch.cuda.is_available():
 else:
     config.device = torch.device('cpu')
     
+print('Summary - Device Info :')
 print('CUDA is available: {}'.format(torch.cuda.is_available()))
 print('Number of GPUs: {}'.format(torch.cuda.device_count()))
 
 for i in range (0,torch.cuda.device_count()):
     print('GPU #{}: {}'.format(i,torch.cuda.get_device_name(i)))
-    print('\n')
+    print('Memory Usage:')
+    print('Allocated: ', round(torch.cuda.memory_allocated(0)/1024**3,1), 'GB')
+    print('Cached:   ', round(torch.cuda.memory_reserved(0)/1024**3,1), 'GB')
 
+    
 # load data
 dataset = Data(config.pickle_dir)
 print(dataset)
@@ -66,9 +71,7 @@ metric_set = MetricsSet({
     'loss': SmoothCrossEntropyLoss(config.label_smooth, config.vocab_size, config.pad_token),
     'bucket':  LogitsBucketting(config.vocab_size)
 })
-
-print(mt)
-print('| Summary - Device Info : {}'.format(torch.cuda.device))
+print('PyTorch Model Summary:\n {}'.format(mt))
 
 # define tensorboard writer
 current_time = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
@@ -81,8 +84,10 @@ eval_summary_writer = SummaryWriter(eval_log_dir)
 # Train Start
 print(">> Train start...")
 idx = 0
+error_num = 0
+success = 0
 for e in range(config.epochs):
-    print(">>> [Epoch was updated]")
+    print("Epoch: {}".format(e))
     for b in range(len(dataset.files) // config.batch_size):
         scheduler.optimizer.zero_grad()
         try:
@@ -90,17 +95,30 @@ for e in range(config.epochs):
             batch_x = torch.from_numpy(batch_x).contiguous().to(config.device, non_blocking=True, dtype=torch.int)
             batch_y = torch.from_numpy(batch_y).contiguous().to(config.device, non_blocking=True, dtype=torch.int)
         except IndexError:
+            if error_num % 100 == 0:
+                traceback.print_exc()
+            error_num += 1
             continue
-
+        print("b is : {}".format(b))
         start_time = time.time()
         mt.train()
         sample = mt.forward(batch_x)
-        metrics = metric_set(sample, batch_y)
-        loss = metrics['loss']
+        sample = list(sample)
+        #print(len(sample))
+       # print(sample[0])
+       
+        #for i in sample:
+            #print(i)
+            #print()
+            #print('-'*60)
+            #print()
+        #print(batch_y)
+        metrics = metric_set(sample[1], batch_y)
+        loss = metrics['loss']  
         loss.backward()
         scheduler.step()
         end_time = time.time()
-
+        success += 1
         if config.debug:
             print("[Loss]: {}".format(loss))
 
@@ -146,6 +164,7 @@ for e in range(config.epochs):
         if config.debug:
             print('output switch time: {}'.format(sw_end - sw_start) )
 
+print('Errors: {}\tSuccesses: {}'.format(error_num,success))
 torch.save(single_mt.state_dict(), args.model_dir+'/final.pth'.format(idx))
 eval_summary_writer.close()
 train_summary_writer.close()

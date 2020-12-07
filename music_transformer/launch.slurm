@@ -22,4 +22,4 @@ mkdir -p job_logs
 mkdir -p archived_logs
 # Remember to activate conda env
 nvidia-smi
-python -u train.py -c config/base.yml config/train.yml -m archived_logs/$SLURM_JOB_ID
+python -u train.py -c config/base.yml config/debug_train-piano.yml -m archived_logs/$SLURM_JOB_ID
