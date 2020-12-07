@@ -105,7 +105,7 @@ for e in range(config.epochs):
         sample = mt.forward(batch_x)
         sample = list(sample)
         #print(len(sample))
-       # print(sample[0])
+        print(sample[0])
        
         #for i in sample:
             #print(i)
@@ -113,7 +113,7 @@ for e in range(config.epochs):
             #print('-'*60)
             #print()
         #print(batch_y)
-        metrics = metric_set(sample[1], batch_y)
+        metrics = metric_set(sample[0], batch_y)
         loss = metrics['loss']  
         loss.backward()
         scheduler.step()
