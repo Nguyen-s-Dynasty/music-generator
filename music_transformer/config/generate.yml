@@ -1,4 +1,4 @@
-save_path: 'bin/generated.mid'
-condition_file:
+save_path: 'generated.mid'
+condition_file: '../music_transformer/raw_datasets/vgmusic/Legend_Of_Zelda-Embellished_Version.mid'
 length: 4000
 threshold_len: 500

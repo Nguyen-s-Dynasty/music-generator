@@ -2,7 +2,7 @@ from typing import Optional, Any
 
 import torch
 import torch.nn.functional as F
-from torch.nn.modules.loss import CrossEntropyLoss, _Loss
+from torch.nn.modules.loss import CrossEntropyLoss, _Loss, NLLLoss
 # from tensorflow.python.keras.optimizer_v2.learning_rate_schedule import LearningRateSchedule
 
 

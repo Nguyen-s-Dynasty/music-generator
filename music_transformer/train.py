@@ -69,7 +69,9 @@ else:
 metric_set = MetricsSet({
     'accuracy': CategoricalAccuracy(),
     'loss': SmoothCrossEntropyLoss(config.label_smooth, config.vocab_size, config.pad_token),
-    'bucket':  LogitsBucketting(config.vocab_size)
+    'bucket':  LogitsBucketting(config.vocab_size),
+    'nll': NegativeLogLoss(),
+    'pitch_entropy': PitchCrossEntropy(),
 })
 print('PyTorch Model Summary:\n {}'.format(mt))
 
@@ -123,6 +125,8 @@ for e in range(config.epochs):
             print("[Loss]: {}".format(loss))
 
         train_summary_writer.add_scalar('loss', metrics['loss'], global_step=idx)
+        train_summary_writer.add_scalar('pitch_entropy', metrics['pitch_entropy'], global_step=idx)
+        train_summary_writer.add_scalar('nll', metrics['nll'], global_step=idx)
         train_summary_writer.add_scalar('accuracy', metrics['accuracy'], global_step=idx)
         train_summary_writer.add_scalar('learning_rate', scheduler.rate(), global_step=idx)
         train_summary_writer.add_scalar('iter_p_sec', end_time-start_time, global_step=idx)
@@ -145,15 +149,18 @@ for e in range(config.epochs):
                     attn_log_name = "attn/layer-{}".format(i)
                     utils.attention_image_summary(
                         attn_log_name, weight, step=idx, writer=eval_summary_writer)
-
+            
+           
             eval_summary_writer.add_scalar('loss', eval_metrics['loss'], global_step=idx)
+            eval_summary_writer.add_scalar('pitch_entropy', eval_metrics['pitch_entropy'], global_step=idx)
+            eval_summary_writer.add_scalar('nll', eval_metrics['nll'], global_step=idx)
             eval_summary_writer.add_scalar('accuracy', eval_metrics['accuracy'], global_step=idx)
             eval_summary_writer.add_histogram("logits_bucket", eval_metrics['bucket'], global_step=idx)
 
             print('\n====================================================')
             print('Epoch/Batch: {}/{}'.format(e, b))
-            print('Train >>>> Loss: {:6.6}, Accuracy: {}'.format(metrics['loss'], metrics['accuracy']))
-            print('Eval >>>> Loss: {:6.6}, Accuracy: {}'.format(eval_metrics['loss'], eval_metrics['accuracy']))
+            print('Train >>>> Loss: {:6.6}, Pitch Entropy: {:6.6}, Negative Log: {:6.6}, Accuracy: {}'.format(metrics['loss'], metrics['pitch_entropy'], metrics['nll'], metrics['accuracy']))
+            print('Eval Train >>>> Loss: {:6.6}, Pitch Entropy: {:6.6}, Negative Log: {:6.6}, Accuracy: {}'.format(eval_metrics['loss'], eval_metrics['pitch_entropy'], eval_metrics['nll'], eval_metrics['accuracy']))
         torch.cuda.empty_cache()
         idx += 1
 
