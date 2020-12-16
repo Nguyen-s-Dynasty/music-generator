@@ -6,6 +6,7 @@ import torch.nn.functional as F
 import torch.nn as nn
 from midi_processor.processor import decode_midi, encode_midi
 import muspy 
+from muspy.metrics import *
 from typing import Dict
 
 
@@ -68,9 +69,9 @@ class NegativeLogLoss(_Metric):
         self.nll = nn.NLLLoss()
         
     def forward(self, input: torch.Tensor, target: torch.Tensor):
-        print('printing input/output')
-        print(input.shape)
-        print(target.shape)
+        #print('printing input/output')
+        #print(input.shape)
+        #print(target.shape)
         #print(target)
         #input = input.softmax(-1)
         # gets note # 
@@ -87,16 +88,26 @@ class PitchCrossEntropy (_Metric):
     def __init__(self):
         super().__init__()
     def forward(self, input: torch.Tensor, target: torch.Tensor):
-        categorical_input = input.argmax(-1)
+        note_classes = input.size()[2]
+        input = input.view(-1,note_classes)
+        target = target.view(-1)
+        
+        
+        #print('Printing tgt: {}'.format(target.shape))
+        
+        
+        categorical_input = input.argmax(-1).long()
+        #print('Printing input: {}'.format(categorical_input.shape))
         i = categorical_input.tolist() 
         o = target.tolist()
-        print('Printing o: ')
+        #print('Printing o: ')
         #print(o)
-        print(max(o))
-        decode_midi(o[0], file_path='temp.mid')
-        music_o = muspy.read('temp.mid')
-        decode_midi(i[0], file_path='temp.mid')
-        music_i = muspy.read('temp.mid')
+        print(o)
+        #print('Printing i: {}'.format(i))
+        decode_midi(o, file_path='temp_o.mid')
+        music_o = muspy.read('temp_o.mid')
+        decode_midi(i, file_path='temp_i.mid')
+        music_i = muspy.read('temp_i.mid')
         return abs(pitch_entropy(music_i) - pitch_entropy(music_o))
         
      

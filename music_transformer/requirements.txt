@@ -29,3 +29,4 @@ shortuuid==0.5.0
 simplejson==3.16.0
 six==1.12.0
 muspy
+git+https://github.com/csteinmetz1/auraloss.git

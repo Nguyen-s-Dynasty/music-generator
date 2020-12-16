@@ -118,7 +118,8 @@ def _merge_note(snote_sequence):
                 result = pretty_midi.Note(on.velocity, snote.value, on.time, off.time)
                 result_array.append(result)
             except:
-                print('info removed pitch: {}'.format(snote.value))
+                pass
+                #print('info removed pitch: {}'.format(snote.value))
     return result_array
 
 
@@ -240,9 +241,15 @@ def decode_midi(idx_array, file_path=None):
     mid = pretty_midi.PrettyMIDI()
     # if want to change instument, see https://www.midi.org/specifications/item/gm-level-1-sound-set
     instument = pretty_midi.Instrument(1, False, "Developed By Yang-Kichang")
+    
+    
+    for ins in range(len(note_seq)):
+        if note_seq[ins].velocity > 127:
+            note_seq[ins].velocity = 126
+    
     instument.notes = note_seq
-
     mid.instruments.append(instument)
+       
     if file_path is not None:
         mid.write(file_path)
     return mid
